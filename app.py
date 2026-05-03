@@ -21,633 +21,548 @@ st.set_page_config(
 )
 
 # ─────────────────────────────────────────────
-# CUSTOM CSS
+# CUSTOM CSS — matches prototype design
 # ─────────────────────────────────────────────
 st.markdown("""
 <style>
     .main { background-color: #f8f9fa; }
     .stApp { background-color: #f8f9fa; }
+    .block-container { padding-top: 2rem; }
+    h1, h2, h3 { color: #1a2e3a; }
     .metric-card {
         background: white;
-        padding: 20px;
-        border-radius: 12px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        padding: 24px;
+        border-radius: 16px;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.06);
         text-align: center;
         margin: 8px 0;
     }
     .risk-high {
-        background: linear-gradient(135deg, #ff4444, #cc0000);
+        background: #ff4444;
         color: white;
-        padding: 8px 16px;
+        padding: 8px 18px;
         border-radius: 20px;
-        font-weight: bold;
+        font-weight: 700;
         display: inline-block;
+        font-size: 0.95em;
     }
     .risk-moderate {
-        background: linear-gradient(135deg, #ff9500, #e67e00);
+        background: #ff9500;
         color: white;
-        padding: 8px 16px;
+        padding: 8px 18px;
         border-radius: 20px;
-        font-weight: bold;
+        font-weight: 700;
         display: inline-block;
+        font-size: 0.95em;
     }
     .risk-low {
-        background: linear-gradient(135deg, #34c759, #248a3d);
+        background: #34c759;
         color: white;
-        padding: 8px 16px;
+        padding: 8px 18px;
         border-radius: 20px;
-        font-weight: bold;
+        font-weight: 700;
         display: inline-block;
+        font-size: 0.95em;
     }
     .alert-banner {
         background: linear-gradient(135deg, #ff4444, #cc0000);
         color: white;
-        padding: 16px 20px;
-        border-radius: 12px;
-        margin: 10px 0;
-        font-weight: bold;
+        padding: 18px 22px;
+        border-radius: 14px;
+        margin: 16px 0;
+        font-weight: 600;
+        box-shadow: 0 4px 12px rgba(255,68,68,0.3);
     }
     .info-card {
         background: white;
-        padding: 16px;
+        padding: 16px 20px;
         border-radius: 12px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         margin: 8px 0;
         border-left: 4px solid #2d6a4f;
     }
-    .section-header {
-        color: #1a1a2e;
-        font-size: 1.3em;
-        font-weight: 700;
-        margin: 20px 0 10px 0;
+    .welcome-card {
+        background: linear-gradient(135deg, #1a4d3a, #2d6a4f);
+        color: white;
+        padding: 32px;
+        border-radius: 20px;
+        margin: 20px 0;
+        text-align: center;
+        box-shadow: 0 8px 24px rgba(45,106,79,0.3);
+    }
+    .stButton button {
+        background: #ff9500;
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 10px;
+        font-weight: 600;
+    }
+    .stButton button:hover {
+        background: #e67e00;
+        color: white;
     }
 </style>
 """, unsafe_allow_html=True)
 
 # ─────────────────────────────────────────────
-# ACCRA DISTRICTS DATA
+# ACCRA DISTRICTS — Real coordinates + risk profiles
+# Based on socioeconomic factors and infrastructure
 # ─────────────────────────────────────────────
 ACCRA_DISTRICTS = {
-    "Adenta": {"lat": 5.7167, "lon": -0.1667, "population": 142463, "density": "High"},
-    "Medina": {"lat": 5.6667, "lon": -0.2000, "population": 89000, "density": "Very High"},
-    "Nima": {"lat": 5.5833, "lon": -0.2167, "population": 120000, "density": "Very High"},
-    "Dansoman": {"lat": 5.5500, "lon": -0.2667, "population": 95000, "density": "High"},
-    "Mamprobi": {"lat": 5.5333, "lon": -0.2333, "population": 78000, "density": "High"},
-    "Ablekuma West": {"lat": 5.5667, "lon": -0.2500, "population": 110000, "density": "High"},
-    "Tema": {"lat": 5.6667, "lon": -0.0167, "population": 161612, "density": "Moderate"},
-    "Osu": {"lat": 5.5500, "lon": -0.1833, "population": 45000, "density": "Moderate"},
-    "Korle Bu": {"lat": 5.5333, "lon": -0.2167, "population": 67000, "density": "High"},
-    "Accra Central": {"lat": 5.5500, "lon": -0.2167, "population": 185000, "density": "Very High"},
+    # HIGH RISK — Slums / Informal Settlements
+    "Nima": {"lat": 5.5833, "lon": -0.2056, "category": "Informal Settlement", "flood_risk": "HIGH", "fire_risk": "HIGH", "waste_risk": "HIGH"},
+    "Chorkor": {"lat": 5.5333, "lon": -0.2333, "category": "Informal Settlement", "flood_risk": "HIGH", "fire_risk": "HIGH", "waste_risk": "HIGH"},
+    "Old Fadama": {"lat": 5.5500, "lon": -0.2167, "category": "Informal Settlement", "flood_risk": "HIGH", "fire_risk": "HIGH", "waste_risk": "HIGH"},
+    "Agbogbloshie": {"lat": 5.5481, "lon": -0.2233, "category": "Informal Settlement", "flood_risk": "HIGH", "fire_risk": "HIGH", "waste_risk": "HIGH"},
+    "James Town": {"lat": 5.5333, "lon": -0.2167, "category": "Informal Settlement", "flood_risk": "HIGH", "fire_risk": "HIGH", "waste_risk": "HIGH"},
+    "Sukura": {"lat": 5.5450, "lon": -0.2350, "category": "Informal Settlement", "flood_risk": "HIGH", "fire_risk": "HIGH", "waste_risk": "HIGH"},
+    "Sabon Zongo": {"lat": 5.5550, "lon": -0.2300, "category": "Informal Settlement", "flood_risk": "HIGH", "fire_risk": "HIGH", "waste_risk": "HIGH"},
+    "Mamobi": {"lat": 5.5867, "lon": -0.2100, "category": "Informal Settlement", "flood_risk": "HIGH", "fire_risk": "HIGH", "waste_risk": "HIGH"},
+    "Ashaiman": {"lat": 5.7000, "lon": -0.0333, "category": "Informal Settlement", "flood_risk": "HIGH", "fire_risk": "HIGH", "waste_risk": "HIGH"},
+    "Mamprobi": {"lat": 5.5333, "lon": -0.2333, "category": "Informal Settlement", "flood_risk": "HIGH", "fire_risk": "MODERATE", "waste_risk": "HIGH"},
+
+    # MODERATE-HIGH RISK — Dense Mixed Areas
+    "Kaneshie": {"lat": 5.5667, "lon": -0.2333, "category": "Dense Mixed", "flood_risk": "HIGH", "fire_risk": "MODERATE", "waste_risk": "HIGH"},
+    "Adabraka": {"lat": 5.5583, "lon": -0.2056, "category": "Dense Mixed", "flood_risk": "MODERATE", "fire_risk": "MODERATE", "waste_risk": "MODERATE"},
+    "Lapaz": {"lat": 5.6042, "lon": -0.2347, "category": "Dense Mixed", "flood_risk": "HIGH", "fire_risk": "MODERATE", "waste_risk": "HIGH"},
+    "Darkuman": {"lat": 5.5833, "lon": -0.2500, "category": "Dense Mixed", "flood_risk": "HIGH", "fire_risk": "MODERATE", "waste_risk": "HIGH"},
+    "Bubuashie": {"lat": 5.5667, "lon": -0.2417, "category": "Dense Mixed", "flood_risk": "MODERATE", "fire_risk": "MODERATE", "waste_risk": "MODERATE"},
+    "Odorkor": {"lat": 5.5750, "lon": -0.2667, "category": "Dense Mixed", "flood_risk": "MODERATE", "fire_risk": "MODERATE", "waste_risk": "MODERATE"},
+    "Abeka": {"lat": 5.6000, "lon": -0.2333, "category": "Dense Mixed", "flood_risk": "MODERATE", "fire_risk": "MODERATE", "waste_risk": "MODERATE"},
+    "Kotobabi": {"lat": 5.5917, "lon": -0.2167, "category": "Dense Mixed", "flood_risk": "MODERATE", "fire_risk": "MODERATE", "waste_risk": "MODERATE"},
+    "Alajo": {"lat": 5.6000, "lon": -0.2167, "category": "Dense Mixed", "flood_risk": "HIGH", "fire_risk": "MODERATE", "waste_risk": "HIGH"},
+    "Pig Farm": {"lat": 5.5917, "lon": -0.2083, "category": "Dense Mixed", "flood_risk": "MODERATE", "fire_risk": "MODERATE", "waste_risk": "MODERATE"},
+    "Kwashieman": {"lat": 5.5833, "lon": -0.2750, "category": "Dense Mixed", "flood_risk": "MODERATE", "fire_risk": "MODERATE", "waste_risk": "MODERATE"},
+    "Sakaman": {"lat": 5.5667, "lon": -0.2583, "category": "Dense Mixed", "flood_risk": "MODERATE", "fire_risk": "MODERATE", "waste_risk": "MODERATE"},
+
+    # MODERATE RISK — Working Class / Flood-Prone Suburbs
+    "Adenta": {"lat": 5.7167, "lon": -0.1667, "category": "Working Class Suburb", "flood_risk": "MODERATE", "fire_risk": "LOW", "waste_risk": "MODERATE"},
+    "Madina": {"lat": 5.6833, "lon": -0.1667, "category": "Working Class Suburb", "flood_risk": "MODERATE", "fire_risk": "LOW", "waste_risk": "MODERATE"},
+    "Medina": {"lat": 5.6667, "lon": -0.2000, "category": "Working Class Suburb", "flood_risk": "MODERATE", "fire_risk": "LOW", "waste_risk": "MODERATE"},
+    "Dansoman": {"lat": 5.5500, "lon": -0.2667, "category": "Working Class Suburb", "flood_risk": "MODERATE", "fire_risk": "LOW", "waste_risk": "MODERATE"},
+    "Tema": {"lat": 5.6667, "lon": -0.0167, "category": "Working Class Suburb", "flood_risk": "MODERATE", "fire_risk": "LOW", "waste_risk": "MODERATE"},
+    "Kasoa": {"lat": 5.5333, "lon": -0.4167, "category": "Working Class Suburb", "flood_risk": "MODERATE", "fire_risk": "LOW", "waste_risk": "MODERATE"},
+    "Achimota": {"lat": 5.6333, "lon": -0.2333, "category": "Working Class Suburb", "flood_risk": "LOW", "fire_risk": "LOW", "waste_risk": "MODERATE"},
+    "Ablekuma": {"lat": 5.5833, "lon": -0.2917, "category": "Working Class Suburb", "flood_risk": "MODERATE", "fire_risk": "LOW", "waste_risk": "MODERATE"},
+    "Taifa": {"lat": 5.6667, "lon": -0.2333, "category": "Working Class Suburb", "flood_risk": "MODERATE", "fire_risk": "LOW", "waste_risk": "MODERATE"},
+    "Dome": {"lat": 5.6500, "lon": -0.2167, "category": "Working Class Suburb", "flood_risk": "MODERATE", "fire_risk": "LOW", "waste_risk": "MODERATE"},
+    "Haatso": {"lat": 5.6500, "lon": -0.2000, "category": "Working Class Suburb", "flood_risk": "MODERATE", "fire_risk": "LOW", "waste_risk": "MODERATE"},
+    "Kwabenya": {"lat": 5.7000, "lon": -0.2167, "category": "Working Class Suburb", "flood_risk": "LOW", "fire_risk": "LOW", "waste_risk": "MODERATE"},
+
+    # LOW RISK — Affluent / Planned Areas
+    "Airport Residential": {"lat": 5.6042, "lon": -0.1733, "category": "Affluent Planned", "flood_risk": "LOW", "fire_risk": "LOW", "waste_risk": "LOW"},
+    "East Legon": {"lat": 5.6500, "lon": -0.1500, "category": "Affluent Planned", "flood_risk": "LOW", "fire_risk": "LOW", "waste_risk": "LOW"},
+    "Cantonments": {"lat": 5.5833, "lon": -0.1667, "category": "Affluent Planned", "flood_risk": "LOW", "fire_risk": "LOW", "waste_risk": "LOW"},
+    "Labone": {"lat": 5.5667, "lon": -0.1750, "category": "Affluent Planned", "flood_risk": "LOW", "fire_risk": "LOW", "waste_risk": "LOW"},
+    "Osu": {"lat": 5.5556, "lon": -0.1828, "category": "Affluent Planned", "flood_risk": "LOW", "fire_risk": "LOW", "waste_risk": "LOW"},
+    "Ridge": {"lat": 5.5667, "lon": -0.2000, "category": "Affluent Planned", "flood_risk": "LOW", "fire_risk": "LOW", "waste_risk": "LOW"},
+    "Roman Ridge": {"lat": 5.5917, "lon": -0.1917, "category": "Affluent Planned", "flood_risk": "LOW", "fire_risk": "LOW", "waste_risk": "LOW"},
+    "Dzorwulu": {"lat": 5.6083, "lon": -0.1917, "category": "Affluent Planned", "flood_risk": "LOW", "fire_risk": "LOW", "waste_risk": "LOW"},
+    "Abelemkpe": {"lat": 5.6000, "lon": -0.2000, "category": "Affluent Planned", "flood_risk": "LOW", "fire_risk": "LOW", "waste_risk": "LOW"},
 }
 
+# Risk score mapping
+RISK_SCORE = {"HIGH": 85, "MODERATE": 55, "LOW": 25}
+RISK_COLOR = {"HIGH": "#ff4444", "MODERATE": "#ff9500", "LOW": "#34c759"}
+RISK_FOLIUM = {"HIGH": "red", "MODERATE": "orange", "LOW": "green"}
+
 # ─────────────────────────────────────────────
-# FETCH REAL WEATHER DATA FROM OPEN-METEO
+# WEATHER API — Open-Meteo (real data)
 # ─────────────────────────────────────────────
 @st.cache_data(ttl=3600)
-def fetch_weather_data(lat, lon):
+def fetch_weather(lat, lon):
     url = (
         f"https://api.open-meteo.com/v1/forecast?"
         f"latitude={lat}&longitude={lon}"
-        f"&hourly=precipitation,temperature_2m,relative_humidity_2m"
+        f"&hourly=precipitation,temperature_2m"
         f"&daily=precipitation_sum,temperature_2m_max,precipitation_probability_max"
-        f"&timezone=Africa%2FAccra"
-        f"&forecast_days=7"
+        f"&timezone=Africa%2FAccra&forecast_days=7"
     )
     try:
-        response = requests.get(url, timeout=10)
-        data = response.json()
-        return data
-    except:
+        r = requests.get(url, timeout=10)
+        return r.json()
+    except Exception:
         return None
 
 # ─────────────────────────────────────────────
-# FLOOD RISK CALCULATION
+# DYNAMIC FLOOD RISK — combines base risk + live rainfall
 # ─────────────────────────────────────────────
-def calculate_flood_risk(precipitation_mm, district):
-    density = ACCRA_DISTRICTS[district]["density"]
-    density_multiplier = {
-        "Very High": 1.5,
-        "High": 1.3,
-        "Moderate": 1.0,
-        "Low": 0.7
-    }.get(density, 1.0)
-
-    base_risk = min(precipitation_mm * density_multiplier / 50, 1.0)
-
-    if base_risk >= 0.7:
-        return "HIGH", base_risk * 100
-    elif base_risk >= 0.4:
-        return "MODERATE", base_risk * 100
-    else:
-        return "LOW", base_risk * 100
+def calc_dynamic_flood(district, rainfall_mm):
+    base = ACCRA_DISTRICTS[district]["flood_risk"]
+    base_score = RISK_SCORE[base]
+    rain_boost = min(rainfall_mm * 1.5, 30)
+    final = min(base_score + rain_boost, 100)
+    if final >= 70: return "HIGH", final
+    if final >= 40: return "MODERATE", final
+    return "LOW", final
 
 # ─────────────────────────────────────────────
-# FIRE RISK MODEL (LOGISTIC REGRESSION)
+# FIRE RISK MODEL — Logistic Regression
 # ─────────────────────────────────────────────
-@st.cache_data
-def build_fire_risk_model():
+@st.cache_resource
+def train_fire_model():
     np.random.seed(42)
-    n_samples = 500
+    n = 600
+    density = np.random.uniform(0.1, 1.0, n)
+    wiring_age = np.random.uniform(1, 30, n)
+    temp = np.random.uniform(25, 38, n)
+    dry = np.random.randint(0, 2, n)
+    reports = np.random.randint(0, 25, n)
+    score = (0.35*density + 0.25*(wiring_age/30) + 0.15*((temp-25)/13) + 0.15*dry + 0.10*(reports/25))
+    y = (score > 0.5).astype(int)
+    X = np.column_stack([density, wiring_age, temp, dry, reports])
+    sc = StandardScaler()
+    Xs = sc.fit_transform(X)
+    m = LogisticRegression(random_state=42)
+    m.fit(Xs, y)
+    return m, sc
 
-    building_density = np.random.uniform(0.1, 1.0, n_samples)
-    electrical_age = np.random.uniform(1, 30, n_samples)
-    temperature = np.random.uniform(25, 38, n_samples)
-    dry_season = np.random.randint(0, 2, n_samples)
-    reported_hazards = np.random.randint(0, 20, n_samples)
+def predict_fire(district, temp=32, dry_season=1, reports=5):
+    m, sc = train_fire_model()
+    cat = ACCRA_DISTRICTS[district]["category"]
+    density_map = {"Informal Settlement": 0.95, "Dense Mixed": 0.75, "Working Class Suburb": 0.50, "Affluent Planned": 0.25}
+    density = density_map.get(cat, 0.5)
+    wiring_age = 22 if cat == "Informal Settlement" else 15 if cat == "Dense Mixed" else 8
+    X = np.array([[density, wiring_age, temp, dry_season, reports]])
+    Xs = sc.transform(X)
+    p = m.predict_proba(Xs)[0][1]
+    if p >= 0.65: return "HIGH", p*100
+    if p >= 0.35: return "MODERATE", p*100
+    return "LOW", p*100
 
-    risk_score = (
-        0.3 * building_density +
-        0.25 * (electrical_age / 30) +
-        0.2 * ((temperature - 25) / 13) +
-        0.15 * dry_season +
-        0.1 * (reported_hazards / 20)
-    )
-    fire_risk = (risk_score > 0.5).astype(int)
+# ─────────────────────────────────────────────
+# SESSION STATE — onboarding
+# ─────────────────────────────────────────────
+if "onboarded" not in st.session_state:
+    st.session_state.onboarded = False
+if "user_name" not in st.session_state:
+    st.session_state.user_name = ""
+if "user_district" not in st.session_state:
+    st.session_state.user_district = "Adenta"
 
-    X = np.column_stack([
-        building_density, electrical_age,
-        temperature, dry_season, reported_hazards
-    ])
-    y = fire_risk
+# ─────────────────────────────────────────────
+# ONBOARDING SCREEN
+# ─────────────────────────────────────────────
+if not st.session_state.onboarded:
+    st.markdown("""
+    <div class='welcome-card'>
+        <h1 style='color:white; margin:0; font-size:2.8em'>🛡️ SmartAccra</h1>
+        <p style='font-size:1.3em; margin:10px 0; opacity:0.95'>Know before it happens.</p>
+        <p style='opacity:0.85'>Urban Risk Intelligence for Accra, Ghana</p>
+    </div>
+    """, unsafe_allow_html=True)
 
-    scaler = StandardScaler()
-    X_scaled = scaler.fit_transform(X)
+    st.markdown("### Welcome! Let's personalise your experience")
+    col1, col2 = st.columns([1, 1])
+    with col1:
+        name = st.text_input("👤 What's your first name?", placeholder="e.g. Kwame")
+    with col2:
+        district = st.selectbox(
+            "📍 Where do you live?",
+            sorted(ACCRA_DISTRICTS.keys()),
+            help="Select your neighbourhood from the list"
+        )
 
-    model = LogisticRegression(random_state=42)
-    model.fit(X_scaled, y)
+    st.markdown("<br>", unsafe_allow_html=True)
+    st.markdown("Or type a specific address (optional):")
+    custom_address = st.text_input("🏠 Street address or landmark", placeholder="e.g. Near Medina Market")
 
-    return model, scaler
+    st.markdown("<br>", unsafe_allow_html=True)
+    if st.button("🚀 Continue to SmartAccra", use_container_width=True):
+        if name.strip():
+            st.session_state.user_name = name.strip()
+            st.session_state.user_district = district
+            st.session_state.user_address = custom_address
+            st.session_state.onboarded = True
+            st.rerun()
+        else:
+            st.warning("Please enter your name to continue")
 
-def predict_fire_risk(district, temperature=32, dry_season=1, reported_hazards=5):
-    model, scaler = build_fire_risk_model()
+    st.markdown("---")
+    st.caption("🔒 Sign in with Google coming in Phase 2 • Your data stays on your device")
+    st.stop()
 
-    density_map = {"Very High": 0.9, "High": 0.7, "Moderate": 0.5, "Low": 0.3}
-    building_density = density_map.get(
-        ACCRA_DISTRICTS[district]["density"], 0.5
-    )
-    electrical_age = 15
+# ─────────────────────────────────────────────
+# MAIN APP — User is onboarded
+# ─────────────────────────────────────────────
+user_name = st.session_state.user_name
+selected = st.session_state.user_district
+info = ACCRA_DISTRICTS[selected]
+lat, lon = info["lat"], info["lon"]
 
-    X = np.array([[
-        building_density, electrical_age,
-        temperature, dry_season, reported_hazards
-    ]])
-    X_scaled = scaler.transform(X)
-    probability = model.predict_proba(X_scaled)[0][1]
+# Fetch weather
+weather = fetch_weather(lat, lon)
+if weather and "daily" in weather:
+    d = weather["daily"]
+    rain_today = d["precipitation_sum"][0] or 0
+    rain_tomorrow = d["precipitation_sum"][1] if len(d["precipitation_sum"]) > 1 else 0
+    rain_prob = d["precipitation_probability_max"][0] or 0
+else:
+    rain_today, rain_tomorrow, rain_prob = 5, 15, 60
 
-    if probability >= 0.7:
-        return "HIGH", probability * 100
-    elif probability >= 0.4:
-        return "MODERATE", probability * 100
-    else:
-        return "LOW", probability * 100
+flood_lvl, flood_pct = calc_dynamic_flood(selected, rain_tomorrow)
+fire_lvl, fire_pct = predict_fire(selected)
+waste_lvl = info["waste_risk"]
 
 # ─────────────────────────────────────────────
 # SIDEBAR
 # ─────────────────────────────────────────────
 with st.sidebar:
-    st.image(
-        "https://img.shields.io/badge/SmartAccra-Know%20Before%20It%20Happens-2d6a4f?style=for-the-badge",
-        use_column_width=True
-    )
+    st.markdown(f"### 👋 Hi, {user_name}!")
+    st.markdown(f"📍 **{selected}**")
+    st.caption(f"Category: {info['category']}")
     st.markdown("---")
-    st.markdown("### 📍 Select Your District")
-    selected_district = st.selectbox(
-        "Choose your area",
-        list(ACCRA_DISTRICTS.keys()),
-        index=0
-    )
 
-    district_info = ACCRA_DISTRICTS[selected_district]
-    st.markdown(f"""
-    <div class='info-card'>
-        <strong>District Info</strong><br>
-        Population: {district_info['population']:,}<br>
-        Building Density: {district_info['density']}
-    </div>
-    """, unsafe_allow_html=True)
+    new_district = st.selectbox(
+        "Change district",
+        sorted(ACCRA_DISTRICTS.keys()),
+        index=sorted(ACCRA_DISTRICTS.keys()).index(selected)
+    )
+    if new_district != selected:
+        st.session_state.user_district = new_district
+        st.rerun()
 
     st.markdown("---")
-    st.markdown("### 🧭 Navigation")
     page = st.radio(
-        "Go to",
-        ["🏠 Home Dashboard",
-         "🌊 Flood Risk",
-         "🔥 Fire Risk",
-         "🗑️ Waste & Drainage",
-         "📢 Report a Hazard"]
+        "🧭 Navigation",
+        ["🏠 Home", "🌊 Flood Risk", "🔥 Fire Risk", "🗑️ Waste & Drainage", "📢 Report Hazard", "ℹ️ About"]
     )
+
     st.markdown("---")
-    st.markdown(
-        "<small>SmartAccra v1.0 | SDG 11</small>",
-        unsafe_allow_html=True
-    )
-
-# ─────────────────────────────────────────────
-# FETCH DATA FOR SELECTED DISTRICT
-# ─────────────────────────────────────────────
-lat = district_info["lat"]
-lon = district_info["lon"]
-weather_data = fetch_weather_data(lat, lon)
-
-if weather_data:
-    daily = weather_data.get("daily", {})
-    precip_today = daily.get("precipitation_sum", [0])[0] or 0
-    precip_tomorrow = daily.get("precipitation_sum", [0, 0])[1] or 0
-    precip_max = max(daily.get("precipitation_sum", [0]))
-    precip_prob = daily.get(
-        "precipitation_probability_max", [0]
-    )[0] or 0
-else:
-    precip_today = 5
-    precip_tomorrow = 15
-    precip_max = 25
-    precip_prob = 60
-
-flood_level, flood_score = calculate_flood_risk(
-    precip_tomorrow, selected_district
-)
-fire_level, fire_score = predict_fire_risk(selected_district)
+    if st.button("🚪 Sign out"):
+        st.session_state.onboarded = False
+        st.rerun()
+    st.caption("SmartAccra v1.0 • SDG 11")
 
 # ─────────────────────────────────────────────
 # HOME DASHBOARD
 # ─────────────────────────────────────────────
-if page == "🏠 Home Dashboard":
-    st.markdown(f"## Good day! Here is your SmartAccra update for **{selected_district}**")
-    st.markdown(f"*Last updated: {datetime.now().strftime('%d %B %Y, %H:%M')}*")
+if page == "🏠 Home":
+    hour = datetime.now().hour
+    greet = "Good morning" if hour < 12 else "Good afternoon" if hour < 18 else "Good evening"
+    st.markdown(f"## {greet}, {user_name}!")
+    st.markdown(f"*Here's your update for **{selected}** — {datetime.now().strftime('%A, %d %B %Y')}*")
 
-    if flood_level == "HIGH" or fire_level == "HIGH":
-        st.markdown("""
+    if flood_lvl == "HIGH" or fire_lvl == "HIGH":
+        st.markdown(f"""
         <div class='alert-banner'>
-            ⚠️ ACTIVE ALERT: High risk detected in your area — 
-            scroll down for details
+            ⚠️ ACTIVE ALERT: High risk detected in {selected}. Scroll for details.
         </div>
         """, unsafe_allow_html=True)
 
-    col1, col2, col3 = st.columns(3)
-
-    flood_color = {
-        "HIGH": "risk-high",
-        "MODERATE": "risk-moderate",
-        "LOW": "risk-low"
-    }[flood_level]
-
-    fire_color = {
-        "HIGH": "risk-high",
-        "MODERATE": "risk-moderate",
-        "LOW": "risk-low"
-    }[fire_level]
-
-    with col1:
+    c1, c2, c3 = st.columns(3)
+    with c1:
         st.markdown(f"""
         <div class='metric-card'>
-            <h2>🌊</h2>
-            <h3>Flood Risk</h3>
-            <span class='{flood_color}'>{flood_level}</span>
-            <p style='margin-top:10px; color:#666; font-size:0.9em'>
-                Rain probability: {precip_prob}%<br>
-                Expected rainfall: {precip_tomorrow:.1f}mm
+            <h2 style='margin:0'>🌊</h2>
+            <h3 style='margin:8px 0'>Flood Risk</h3>
+            <span class='risk-{flood_lvl.lower()}'>{flood_lvl}</span>
+            <p style='color:#666; font-size:0.85em; margin-top:12px'>
+                Rain probability: {rain_prob}%<br>
+                Forecast: {rain_tomorrow:.1f}mm tomorrow
             </p>
         </div>
         """, unsafe_allow_html=True)
-
-    with col2:
+    with c2:
         st.markdown(f"""
         <div class='metric-card'>
-            <h2>🔥</h2>
-            <h3>Fire Risk</h3>
-            <span class='{fire_color}'>{fire_level}</span>
-            <p style='margin-top:10px; color:#666; font-size:0.9em'>
-                Building density: {district_info['density']}<br>
-                Risk score: {fire_score:.1f}%
+            <h2 style='margin:0'>🔥</h2>
+            <h3 style='margin:8px 0'>Fire Risk</h3>
+            <span class='risk-{fire_lvl.lower()}'>{fire_lvl}</span>
+            <p style='color:#666; font-size:0.85em; margin-top:12px'>
+                Density: {info['category']}<br>
+                Risk score: {fire_pct:.0f}%
             </p>
         </div>
         """, unsafe_allow_html=True)
-
-    with col3:
+    with c3:
         st.markdown(f"""
         <div class='metric-card'>
-            <h2>🗑️</h2>
-            <h3>Waste & Drainage</h3>
-            <span class='risk-moderate'>MONITOR</span>
-            <p style='margin-top:10px; color:#666; font-size:0.9em'>
-                Next Borla collection:<br>
+            <h2 style='margin:0'>🗑️</h2>
+            <h3 style='margin:8px 0'>Waste & Drainage</h3>
+            <span class='risk-{waste_lvl.lower()}'>{waste_lvl}</span>
+            <p style='color:#666; font-size:0.85em; margin-top:12px'>
+                Next Borla collection<br>
                 <strong>Tomorrow 7:00 AM</strong>
             </p>
         </div>
         """, unsafe_allow_html=True)
 
-    st.markdown("---")
-    st.markdown("### 🗺️ Accra Risk Overview Map")
-
-    m = folium.Map(
-        location=[5.6037, -0.1870],
-        zoom_start=12,
-        tiles="OpenStreetMap"
-    )
-
-    risk_colors = {
-        "Very High": "red",
-        "High": "orange",
-        "Moderate": "green",
-        "Low": "blue"
-    }
-
-    for district, info in ACCRA_DISTRICTS.items():
-        color = risk_colors.get(info["density"], "gray")
+    st.markdown("### 🗺️ Accra Risk Overview")
+    m = folium.Map(location=[5.6037, -0.1870], zoom_start=11, tiles="OpenStreetMap")
+    for d, dinfo in ACCRA_DISTRICTS.items():
+        # combined risk
+        scores = [RISK_SCORE[dinfo["flood_risk"]], RISK_SCORE[dinfo["fire_risk"]], RISK_SCORE[dinfo["waste_risk"]]]
+        avg = sum(scores) / 3
+        if avg >= 70: color = "red"
+        elif avg >= 50: color = "orange"
+        elif avg >= 35: color = "beige"
+        else: color = "green"
         folium.CircleMarker(
-            location=[info["lat"], info["lon"]],
-            radius=15,
+            location=[dinfo["lat"], dinfo["lon"]],
+            radius=10,
             color=color,
             fill=True,
             fill_color=color,
-            fill_opacity=0.6,
-            popup=folium.Popup(
-                f"""<b>{district}</b><br>
-                Population: {info['population']:,}<br>
-                Density: {info['density']}<br>
-                Risk Level: {'HIGH' if info['density'] == 'Very High' else 'MODERATE' if info['density'] == 'High' else 'LOW'}""",
-                max_width=200
-            ),
-            tooltip=district
+            fill_opacity=0.7,
+            popup=folium.Popup(f"<b>{d}</b><br>Type: {dinfo['category']}<br>Flood: {dinfo['flood_risk']}<br>Fire: {dinfo['fire_risk']}<br>Waste: {dinfo['waste_risk']}", max_width=220),
+            tooltip=d
         ).add_to(m)
-
     folium.Marker(
-        location=[district_info["lat"], district_info["lon"]],
-        popup=f"You are here: {selected_district}",
-        tooltip=f"📍 {selected_district}",
+        location=[lat, lon],
+        popup=f"You: {selected}",
+        tooltip=f"📍 {selected}",
         icon=folium.Icon(color="darkgreen", icon="home")
     ).add_to(m)
+    st_folium(m, width=None, height=480, returned_objects=[])
 
-    st_folium(m, width=None, height=450)
-
-    st.markdown("""
-    <small>🔴 Very High Risk &nbsp; 🟠 High Risk &nbsp; 
-    🟢 Moderate Risk &nbsp; 🔵 Lower Risk</small>
-    """, unsafe_allow_html=True)
+    st.caption("🔴 High Risk &nbsp; 🟠 Moderate-High &nbsp; 🟡 Moderate &nbsp; 🟢 Low Risk")
 
 # ─────────────────────────────────────────────
 # FLOOD RISK PAGE
 # ─────────────────────────────────────────────
 elif page == "🌊 Flood Risk":
-    st.markdown(f"## 🌊 Flood Risk Analysis — {selected_district}")
+    st.markdown(f"## 🌊 Flood Risk — {selected}")
+    st.caption("Real-time analysis using Open-Meteo weather API + neighbourhood vulnerability profiling")
 
-    col1, col2, col3 = st.columns(3)
-    with col1:
-        st.metric("Rainfall Today", f"{precip_today:.1f} mm")
-    with col2:
-        st.metric("Rainfall Tomorrow", f"{precip_tomorrow:.1f} mm")
-    with col3:
-        st.metric("Rain Probability", f"{precip_prob}%")
+    c1, c2, c3 = st.columns(3)
+    c1.metric("Rain today", f"{rain_today:.1f} mm")
+    c2.metric("Rain tomorrow", f"{rain_tomorrow:.1f} mm")
+    c3.metric("Probability", f"{rain_prob}%")
 
     st.markdown(f"""
-    <div class='metric-card' style='text-align:center; margin:20px 0'>
-        <h3>Current Flood Risk Level</h3>
-        <span class='{flood_color}' style='font-size:1.4em'>{flood_level}</span>
-        <p style='color:#666; margin-top:10px'>
-            Risk Score: {flood_score:.1f} / 100
-        </p>
+    <div class='metric-card' style='text-align:center; margin:24px 0'>
+        <h3 style='margin:0 0 12px 0'>Current Flood Risk</h3>
+        <span class='risk-{flood_lvl.lower()}' style='font-size:1.3em'>{flood_lvl}</span>
+        <p style='color:#666; margin-top:14px'>Risk score: {flood_pct:.1f} / 100</p>
     </div>
     """, unsafe_allow_html=True)
 
-    st.markdown("### 📈 7-Day Rainfall Forecast for Accra")
-
-    if weather_data:
-        daily = weather_data["daily"]
-        dates = daily["time"][:7]
-        precip = [p or 0 for p in daily["precipitation_sum"][:7]]
-        prob = [p or 0 for p in
-                daily["precipitation_probability_max"][:7]]
-
+    st.markdown("### 📈 7-Day Rainfall Forecast")
+    if weather and "daily" in weather:
+        d = weather["daily"]
+        dates = d["time"][:7]
+        precip = [p or 0 for p in d["precipitation_sum"][:7]]
+        prob = [p or 0 for p in d["precipitation_probability_max"][:7]]
         fig = go.Figure()
         fig.add_trace(go.Bar(
-            x=dates,
-            y=precip,
-            name="Rainfall (mm)",
-            marker_color=[
-                "#cc0000" if p > 20 else
-                "#ff9500" if p > 10 else "#34c759"
-                for p in precip
-            ]
+            x=dates, y=precip, name="Rainfall (mm)",
+            marker_color=["#cc0000" if p > 20 else "#ff9500" if p > 10 else "#34c759" for p in precip]
         ))
         fig.add_trace(go.Scatter(
-            x=dates,
-            y=prob,
-            name="Rain Probability (%)",
-            yaxis="y2",
-            line=dict(color="#1a6faf", width=2),
-            mode="lines+markers"
+            x=dates, y=prob, name="Probability (%)", yaxis="y2",
+            line=dict(color="#1a6faf", width=2.5), mode="lines+markers"
         ))
         fig.update_layout(
-            title="7-Day Rainfall Forecast — Accra",
-            xaxis_title="Date",
-            yaxis_title="Rainfall (mm)",
-            yaxis2=dict(
-                title="Probability (%)",
-                overlaying="y",
-                side="right",
-                range=[0, 100]
-            ),
-            plot_bgcolor="white",
-            height=400,
-            legend=dict(
-                orientation="h",
-                yanchor="bottom",
-                y=1.02,
-                xanchor="right",
-                x=1
-            )
+            xaxis_title="Date", yaxis_title="Rainfall (mm)",
+            yaxis2=dict(title="Probability (%)", overlaying="y", side="right", range=[0, 100]),
+            plot_bgcolor="white", height=400,
+            legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
         )
         st.plotly_chart(fig, use_container_width=True)
 
-    st.markdown("### 🗺️ Flood Risk Map — " + selected_district)
-    flood_map = folium.Map(
-        location=[lat, lon],
-        zoom_start=14,
-        tiles="OpenStreetMap"
-    )
-
+    st.markdown(f"### 🗺️ Flood Map — {selected}")
+    fm = folium.Map(location=[lat, lon], zoom_start=14, tiles="OpenStreetMap")
     folium.CircleMarker(
-        location=[lat, lon],
-        radius=300,
-        color="red" if flood_level == "HIGH" else
-              "orange" if flood_level == "MODERATE" else "green",
-        fill=True,
-        fill_opacity=0.3,
-        popup=f"{selected_district} — Flood Risk: {flood_level}",
-        tooltip=f"Flood Risk Zone: {flood_level}"
-    ).add_to(flood_map)
-
+        location=[lat, lon], radius=400,
+        color=RISK_FOLIUM[flood_lvl], fill=True, fill_opacity=0.25,
+        popup=f"{selected} — {flood_lvl}", tooltip=f"Flood Zone: {flood_lvl}"
+    ).add_to(fm)
     folium.Marker(
-        location=[lat, lon],
-        popup=selected_district,
-        icon=folium.Icon(
-            color="red" if flood_level == "HIGH" else
-                  "orange" if flood_level == "MODERATE" else "green",
-            icon="tint"
-        )
-    ).add_to(flood_map)
+        location=[lat, lon], popup=selected,
+        icon=folium.Icon(color=RISK_FOLIUM[flood_lvl], icon="tint")
+    ).add_to(fm)
+    st_folium(fm, width=None, height=380, returned_objects=[])
 
-    st_folium(flood_map, width=None, height=400)
-
-    st.markdown("### ⚡ What Should You Do?")
-    if flood_level == "HIGH":
+    st.markdown("### ⚡ What should you do?")
+    if flood_lvl == "HIGH":
         actions = [
-            "🚨 Move all valuables and electronics off the floor immediately",
-            "🚪 Clear your entrance drain and surrounding gutters now",
-            "📱 Alert your neighbours — especially elderly residents",
+            "🚨 Move all valuables and electronics OFF the floor immediately",
+            "🚪 Clear your entrance drain and surrounding gutters NOW",
+            "📱 Alert your neighbours — especially elderly residents and children",
             "🏥 Identify your nearest high ground and evacuation route",
-            "💊 Store clean water and emergency supplies",
+            "💧 Store clean water and emergency supplies for 48 hours"
         ]
-    elif flood_level == "MODERATE":
+    elif flood_lvl == "MODERATE":
         actions = [
-            "🧹 Clear debris from gutters and drains near your home",
-            "📦 Move important documents and valuables to higher shelves",
+            "🧹 Clear debris from gutters near your home",
+            "📦 Move important documents to higher shelves",
             "👀 Monitor weather updates over the next 24 hours",
-            "📱 Warn neighbours in low-lying areas",
+            "📱 Warn neighbours in low-lying areas"
         ]
     else:
         actions = [
-            "✅ No immediate action needed",
-            "🧹 Good time to clear gutters as a preventive measure",
-            "📱 Keep SmartAccra notifications on",
+            "✅ No immediate action needed — conditions are safe",
+            "🧹 Good time for preventive gutter cleaning",
+            "📱 Keep SmartAccra notifications enabled"
         ]
-
-    for action in actions:
-        st.markdown(f"""
-        <div class='info-card'>{action}</div>
-        """, unsafe_allow_html=True)
+    for a in actions:
+        st.markdown(f"<div class='info-card'>{a}</div>", unsafe_allow_html=True)
 
 # ─────────────────────────────────────────────
 # FIRE RISK PAGE
 # ─────────────────────────────────────────────
 elif page == "🔥 Fire Risk":
-    st.markdown(f"## 🔥 Fire Risk Analysis — {selected_district}")
-    st.markdown("""
-    *Fire risk is calculated using a Logistic Regression model trained 
-    on building density, electrical infrastructure age, temperature, 
-    seasonal patterns, and community hazard reports.*
-    """)
+    st.markdown(f"## 🔥 Fire Risk — {selected}")
+    st.caption("Predicted using a Logistic Regression model trained on building density, electrical infrastructure age, temperature, seasonal patterns, and community reports.")
 
-    col1, col2, col3 = st.columns(3)
-    with col1:
-        st.metric(
-            "Building Density",
-            district_info["density"]
-        )
-    with col2:
-        st.metric(
-            "Fire Risk Score",
-            f"{fire_score:.1f}%"
-        )
-    with col3:
-        st.metric(
-            "Nearest Fire Station",
-            "~45 min response"
-        )
+    c1, c2, c3 = st.columns(3)
+    c1.metric("Area type", info["category"])
+    c2.metric("Risk score", f"{fire_pct:.0f}%")
+    c3.metric("Fire service ETA", "~45 min" if info["category"] == "Informal Settlement" else "~25 min" if info["category"] == "Dense Mixed" else "~15 min")
 
     st.markdown(f"""
-    <div class='metric-card' style='text-align:center; margin:20px 0'>
-        <h3>Current Fire Risk Level</h3>
-        <span class='{fire_color}' style='font-size:1.4em'>{fire_level}</span>
+    <div class='metric-card' style='text-align:center; margin:24px 0'>
+        <h3 style='margin:0 0 12px 0'>Current Fire Risk</h3>
+        <span class='risk-{fire_lvl.lower()}' style='font-size:1.3em'>{fire_lvl}</span>
     </div>
     """, unsafe_allow_html=True)
 
-    st.markdown("### 📊 Fire Risk Trend — Seasonal Analysis")
-
-    months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
-              "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-    dry_season_risk = [75, 80, 72, 55, 40, 35,
-                       30, 28, 38, 45, 60, 70]
-
+    st.markdown("### 📊 Seasonal Fire Risk Trend")
+    months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+    base = RISK_SCORE[info["fire_risk"]]
+    seasonal = [base+15, base+20, base+10, base-5, base-15, base-20, base-25, base-22, base-15, base-5, base+8, base+18]
+    seasonal = [max(10, min(95, s)) for s in seasonal]
     fig2 = go.Figure()
     fig2.add_trace(go.Scatter(
-        x=months,
-        y=dry_season_risk,
-        fill="tozeroy",
-        fillcolor="rgba(255, 100, 0, 0.2)",
-        line=dict(color="#ff6400", width=2),
-        mode="lines+markers",
-        name="Fire Risk %"
+        x=months, y=seasonal, fill="tozeroy",
+        fillcolor="rgba(255,100,0,0.2)",
+        line=dict(color="#ff6400", width=2.5), mode="lines+markers"
     ))
-    fig2.add_hline(
-        y=70,
-        line_dash="dash",
-        line_color="red",
-        annotation_text="High Risk Threshold"
-    )
+    fig2.add_hline(y=70, line_dash="dash", line_color="red", annotation_text="High Risk")
     fig2.update_layout(
-        title="Seasonal Fire Risk Pattern — Accra",
-        xaxis_title="Month",
-        yaxis_title="Fire Risk Score (%)",
-        plot_bgcolor="white",
-        height=350
+        xaxis_title="Month", yaxis_title="Risk Score (%)",
+        plot_bgcolor="white", height=350
     )
     st.plotly_chart(fig2, use_container_width=True)
 
-    st.markdown("### 🗺️ Fire Risk Heatmap — " + selected_district)
-    fire_map = folium.Map(
-        location=[lat, lon],
-        zoom_start=14,
-        tiles="OpenStreetMap"
-    )
-
-    density_map_colors = {
-        "Very High": "red",
-        "High": "orange",
-        "Moderate": "yellow",
-        "Low": "green"
-    }
-
-    for district, info in ACCRA_DISTRICTS.items():
+    st.markdown(f"### 🗺️ Fire Risk Heatmap")
+    fm2 = folium.Map(location=[lat, lon], zoom_start=12, tiles="OpenStreetMap")
+    for d, dinfo in ACCRA_DISTRICTS.items():
         folium.CircleMarker(
-            location=[info["lat"], info["lon"]],
-            radius=20,
-            color=density_map_colors.get(
-                info["density"], "gray"
-            ),
-            fill=True,
-            fill_opacity=0.5,
-            popup=f"{district}: {info['density']} density",
-            tooltip=district
-        ).add_to(fire_map)
-
+            location=[dinfo["lat"], dinfo["lon"]],
+            radius=14,
+            color=RISK_FOLIUM[dinfo["fire_risk"]], fill=True, fill_opacity=0.55,
+            popup=f"{d}: {dinfo['fire_risk']}", tooltip=d
+        ).add_to(fm2)
     folium.Marker(
-        location=[lat, lon],
-        popup=f"{selected_district} — Fire Risk: {fire_level}",
+        location=[lat, lon], popup=f"{selected} — {fire_lvl}",
         icon=folium.Icon(color="red", icon="fire")
-    ).add_to(fire_map)
-
-    st_folium(fire_map, width=None, height=400)
+    ).add_to(fm2)
+    st_folium(fm2, width=None, height=380, returned_objects=[])
 
     st.markdown("### ⚠️ Community Hazard Feed")
     hazards = [
-        {
-            "report": "Exposed wiring near Medina Market",
-            "time": "2 hours ago",
-            "confirmations": 12,
-            "area": "Medina"
-        },
-        {
-            "report": "Overheating transformer on Station Road",
-            "time": "5 hours ago",
-            "confirmations": 8,
-            "area": "Adenta"
-        },
-        {
-            "report": "Illegal fuel storage at Adenta junction",
-            "time": "1 day ago",
-            "confirmations": 24,
-            "area": "Adenta"
-        },
+        {"r": "Exposed wiring near Nima market", "t": "2 hours ago", "c": 12},
+        {"r": "Overheating transformer on Kaneshie main road", "t": "5 hours ago", "c": 8},
+        {"r": "Illegal fuel storage at Chorkor junction", "t": "1 day ago", "c": 24},
     ]
-
-    for hazard in hazards:
+    for h in hazards:
         st.markdown(f"""
         <div class='info-card'>
-            ⚠️ <strong>{hazard['report']}</strong><br>
-            <small style='color:#888'>
-                {hazard['time']} • {hazard['confirmations']} confirmations
-            </small>
+            ⚠️ <strong>{h['r']}</strong><br>
+            <small style='color:#888'>{h['t']} • {h['c']} community confirmations</small>
         </div>
         """, unsafe_allow_html=True)
 
@@ -655,219 +570,153 @@ elif page == "🔥 Fire Risk":
 # WASTE & DRAINAGE PAGE
 # ─────────────────────────────────────────────
 elif page == "🗑️ Waste & Drainage":
-    st.markdown(
-        f"## 🗑️ Waste & Drainage — {selected_district}"
-    )
+    st.markdown(f"## 🗑️ Waste & Drainage — {selected}")
 
-    col1, col2, col3 = st.columns(3)
-    with col1:
-        st.metric("Gutters Blocked Nearby", "4 reported")
-    with col2:
-        st.metric("Reports Resolved This Week", "12")
-    with col3:
-        st.metric("Neighbourhood Cleanliness Score", "62/100")
+    c1, c2, c3 = st.columns(3)
+    c1.metric("Gutters blocked nearby", "4 reports" if waste_lvl == "HIGH" else "1 report" if waste_lvl == "MODERATE" else "0 reports")
+    c2.metric("Resolved this week", "12" if waste_lvl == "HIGH" else "8" if waste_lvl == "MODERATE" else "3")
+    c3.metric("Cleanliness score", "42/100" if waste_lvl == "HIGH" else "67/100" if waste_lvl == "MODERATE" else "88/100")
 
     st.markdown("### 📅 Borla Collection Schedule")
     days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
     today_idx = datetime.now().weekday()
-
     cols = st.columns(7)
     for i, (col, day) in enumerate(zip(cols, days)):
         with col:
             if i == today_idx:
-                st.markdown(
-                    f"<div style='background:#ff9500; color:white; "
-                    f"text-align:center; padding:8px; border-radius:8px; "
-                    f"font-weight:bold'>{day}<br>TODAY</div>",
-                    unsafe_allow_html=True
-                )
+                col.markdown(f"<div style='background:#ff9500; color:white; text-align:center; padding:10px; border-radius:10px; font-weight:700'>{day}<br>TODAY</div>", unsafe_allow_html=True)
             elif i == (today_idx + 1) % 7:
-                st.markdown(
-                    f"<div style='background:#34c759; color:white; "
-                    f"text-align:center; padding:8px; border-radius:8px; "
-                    f"font-weight:bold'>{day}<br>🚛</div>",
-                    unsafe_allow_html=True
-                )
+                col.markdown(f"<div style='background:#34c759; color:white; text-align:center; padding:10px; border-radius:10px; font-weight:700'>{day}<br>🚛</div>", unsafe_allow_html=True)
             else:
-                st.markdown(
-                    f"<div style='background:#e9ecef; color:#666; "
-                    f"text-align:center; padding:8px; border-radius:8px'>"
-                    f"{day}</div>",
-                    unsafe_allow_html=True
-                )
+                col.markdown(f"<div style='background:#e9ecef; color:#666; text-align:center; padding:10px; border-radius:10px'>{day}</div>", unsafe_allow_html=True)
+    st.markdown("<br><strong>Next collection: Tomorrow 7:00 AM</strong>", unsafe_allow_html=True)
 
-    st.markdown(
-        "<br><strong>Next collection: Tomorrow 7:00 AM</strong>",
-        unsafe_allow_html=True
-    )
-
-    st.markdown("### 📊 Waste Blockage Trend — Last 7 Days")
-    dates_w = [(datetime.now() - timedelta(days=i)).strftime("%d %b")
-               for i in range(6, -1, -1)]
-    blockages = [8, 6, 9, 12, 7, 10, 4]
-
+    st.markdown("### 📊 Blockage Reports — Last 7 Days")
+    dates_w = [(datetime.now() - timedelta(days=i)).strftime("%d %b") for i in range(6, -1, -1)]
+    if waste_lvl == "HIGH":
+        blockages = [8, 6, 9, 12, 7, 10, 4]
+    elif waste_lvl == "MODERATE":
+        blockages = [3, 2, 4, 5, 3, 4, 2]
+    else:
+        blockages = [0, 1, 0, 1, 0, 1, 0]
     fig3 = px.bar(
-        x=dates_w,
-        y=blockages,
-        color=blockages,
+        x=dates_w, y=blockages, color=blockages,
         color_continuous_scale=["green", "yellow", "red"],
-        labels={"x": "Date", "y": "Blockage Reports"},
-        title="Daily Gutter Blockage Reports — " + selected_district
+        labels={"x": "Date", "y": "Reports"},
     )
-    fig3.update_layout(
-        plot_bgcolor="white",
-        height=350,
-        showlegend=False
-    )
+    fig3.update_layout(plot_bgcolor="white", height=320, showlegend=False, coloraxis_showscale=False)
     st.plotly_chart(fig3, use_container_width=True)
 
-    st.markdown("### 🗺️ Drainage Blockage Map")
-    waste_map = folium.Map(
-        location=[lat, lon],
-        zoom_start=14,
-        tiles="OpenStreetMap"
-    )
-
-    blockage_points = [
-        {
-            "lat": lat + 0.005,
-            "lon": lon + 0.003,
-            "location": "Station Road near Market",
-            "severity": "High",
-            "reports": 7
-        },
-        {
-            "lat": lat - 0.004,
-            "lon": lon + 0.006,
-            "location": "Housing Estate Entrance",
-            "severity": "Moderate",
-            "reports": 12
-        },
-        {
-            "lat": lat + 0.002,
-            "lon": lon - 0.005,
-            "location": "Church Street Junction",
-            "severity": "Low",
-            "reports": 5
-        },
+    st.markdown("### 🗺️ Drainage Map")
+    wm = folium.Map(location=[lat, lon], zoom_start=14, tiles="OpenStreetMap")
+    blockages_pts = [
+        {"lat": lat+0.005, "lon": lon+0.003, "name": "Main road junction", "sev": "High", "n": 7},
+        {"lat": lat-0.004, "lon": lon+0.006, "name": "Market entrance", "sev": "Moderate", "n": 12},
+        {"lat": lat+0.002, "lon": lon-0.005, "name": "School street", "sev": "Low", "n": 3},
     ]
-
-    for point in blockage_points:
-        color = (
-            "red" if point["severity"] == "High" else
-            "orange" if point["severity"] == "Moderate" else
-            "green"
-        )
+    for p in blockages_pts:
+        c = "red" if p["sev"] == "High" else "orange" if p["sev"] == "Moderate" else "green"
         folium.CircleMarker(
-            location=[point["lat"], point["lon"]],
-            radius=10,
-            color=color,
-            fill=True,
-            fill_opacity=0.7,
-            popup=folium.Popup(
-                f"""<b>{point['location']}</b><br>
-                Severity: {point['severity']}<br>
-                Reports: {point['reports']}""",
-                max_width=200
-            ),
-            tooltip=point["location"]
-        ).add_to(waste_map)
-
-    folium.Marker(
-        location=[lat, lon],
-        popup="Your location",
-        icon=folium.Icon(color="darkgreen", icon="home")
-    ).add_to(waste_map)
-
-    st_folium(waste_map, width=None, height=400)
+            location=[p["lat"], p["lon"]], radius=10,
+            color=c, fill=True, fill_opacity=0.7,
+            popup=folium.Popup(f"<b>{p['name']}</b><br>Severity: {p['sev']}<br>Reports: {p['n']}", max_width=200),
+            tooltip=p["name"]
+        ).add_to(wm)
+    folium.Marker(location=[lat, lon], popup=selected,
+        icon=folium.Icon(color="darkgreen", icon="home")).add_to(wm)
+    st_folium(wm, width=None, height=380, returned_objects=[])
 
     st.markdown("### 📋 Recent Blockage Reports")
-    for point in blockage_points:
+    for p in blockages_pts:
         st.markdown(f"""
         <div class='info-card'>
-            📍 <strong>{point['location']}</strong> — 
-            {point['severity']} severity<br>
-            <small style='color:#888'>
-                {point['reports']} community confirmations
-            </small>
+            📍 <strong>{p['name']}</strong> — {p['sev']} severity<br>
+            <small style='color:#888'>{p['n']} community confirmations</small>
         </div>
         """, unsafe_allow_html=True)
 
 # ─────────────────────────────────────────────
-# REPORT A HAZARD PAGE
+# REPORT HAZARD PAGE
 # ─────────────────────────────────────────────
-elif page == "📢 Report a Hazard":
+elif page == "📢 Report Hazard":
     st.markdown("## 📢 Report a Hazard")
-    st.markdown(
-        "*Your report helps protect your neighbourhood. "
-        "Every report contributes to SmartAccra's risk models.*"
-    )
+    st.caption("Your report directly improves SmartAccra's predictions for everyone in your community.")
 
-    st.markdown("### Step 1: What are you reporting?")
-    hazard_type = st.radio(
-        "Select hazard type",
-        ["🌊 Blocked Gutter / Drainage",
-         "🔥 Electrical Hazard / Illegal Wiring",
-         "🗑️ Illegal Waste Dumping",
-         "🌊 Active Flooding",
-         "🔥 Fire or Smoke Sighted"]
-    )
+    st.markdown("### Step 1 — What are you reporting?")
+    htype = st.radio("Hazard type", [
+        "🌊 Blocked Gutter / Drainage",
+        "🔥 Electrical Hazard / Illegal Wiring",
+        "🗑️ Illegal Waste Dumping",
+        "🌊 Active Flooding",
+        "🔥 Fire or Smoke Sighted"
+    ])
 
-    st.markdown("### Step 2: Where is it?")
-    report_district = st.selectbox(
-        "Select the district",
-        list(ACCRA_DISTRICTS.keys())
-    )
-    street = st.text_input(
-        "Street name or landmark (optional)",
-        placeholder="e.g. Near Medina Market, Station Road..."
-    )
+    st.markdown("### Step 2 — Where is it?")
+    rdistrict = st.selectbox("District", sorted(ACCRA_DISTRICTS.keys()), index=sorted(ACCRA_DISTRICTS.keys()).index(selected))
+    street = st.text_input("Street name or landmark", placeholder="e.g. Near Nima Market")
 
-    st.markdown("### Step 3: How bad is it?")
-    severity = st.slider(
-        "Severity level",
-        min_value=1,
-        max_value=5,
-        value=3,
-        help="1 = Minor, 5 = Severe"
-    )
-    severity_labels = {
-        1: "Minor", 2: "Mild", 3: "Moderate",
-        4: "Serious", 5: "Severe"
-    }
-    st.markdown(
-        f"**Severity: {severity_labels[severity]}**"
-    )
+    st.markdown("### Step 3 — How severe?")
+    sev = st.slider("Severity (1 = minor, 5 = severe)", 1, 5, 3)
+    sev_label = {1: "Minor", 2: "Mild", 3: "Moderate", 4: "Serious", 5: "Severe"}
+    st.markdown(f"**Severity: {sev_label[sev]}**")
 
-    st.markdown("### Step 4: Additional details")
-    details = st.text_area(
-        "Describe the hazard (optional)",
-        placeholder="Any additional details that could help..."
-    )
+    st.markdown("### Step 4 — Description (optional)")
+    desc = st.text_area("Additional details", placeholder="What did you see?")
 
-    if st.button("🚨 Submit Report", type="primary"):
+    if st.button("🚨 Submit Report"):
         st.success(f"""
-        ✅ Report submitted successfully!
+        ✅ **Report submitted successfully!**
 
-        **{hazard_type}** reported in **{report_district}**
-        Severity: {severity_labels[severity]}
+        {htype} reported in **{rdistrict}**
+        Severity: {sev_label[sev]}
 
-        Thank you! Your report is now live and helping 
-        protect your community. 🙏
+        Thank you, {user_name}! Your report is live. 🙏
         """)
         st.balloons()
 
     st.markdown("---")
-    st.markdown("### 📊 Impact of Community Reports")
+    st.markdown("### 📊 Community Impact This Month")
+    c1, c2, c3 = st.columns(3)
+    c1.metric("Total reports", "847")
+    c2.metric("Resolved", "623")
+    c3.metric("Floods prevented", "12")
 
-    total_reports = 847
-    resolved = 623
-    prevented = 12
+# ─────────────────────────────────────────────
+# ABOUT PAGE
+# ─────────────────────────────────────────────
+elif page == "ℹ️ About":
+    st.markdown("## About SmartAccra")
+    st.markdown("""
+    **SmartAccra** is a data-driven urban risk intelligence platform built to address SDG 11 — Sustainable Cities and Communities, with specific focus on Accra, Ghana.
 
-    col1, col2, col3 = st.columns(3)
-    with col1:
-        st.metric("Total Reports This Month", total_reports)
-    with col2:
-        st.metric("Issues Resolved", resolved)
-    with col3:
-        st.metric("Flood Events Prevented", prevented)
+    ### The Problem
+    Accra's informal settlements face three preventable, recurring crises:
+    - 🌊 **Flooding** — Blocked gutters and poor drainage during rainy season
+    - 🔥 **Fires** — Densely packed buildings with informal/illegal wiring
+    - 🗑️ **Waste accumulation** — Directly worsens flooding by clogging drains
+
+    Residents currently have **no warning system** and **no data tools** to anticipate these disasters.
+
+    ### Our Approach
+    SmartAccra combines three intelligence modules:
+
+    | Module | Data Source | Method |
+    |---|---|---|
+    | 🌊 Flood Risk | Open-Meteo Weather API (real-time) | Dynamic risk scoring with rainfall + neighbourhood vulnerability |
+    | 🔥 Fire Risk | Building density + infrastructure data | Logistic Regression classification |
+    | 🗑️ Waste & Drainage | Community-reported data | Descriptive analytics + temporal trends |
+
+    ### Risk Profiling
+    Risk levels are differentiated based on socioeconomic factors:
+    - 🔴 **Informal Settlements** — Highest risk (Nima, Chorkor, Old Fadama, Agbogbloshie...)
+    - 🟠 **Dense Mixed Areas** — Moderate-high (Kaneshie, Lapaz, Darkuman...)
+    - 🟡 **Working Class Suburbs** — Moderate (Adenta, Madina, Dansoman...)
+    - 🟢 **Affluent Planned Areas** — Low risk (East Legon, Cantonments, Airport Residential...)
+
+    ### Roadmap
+    - **Phase 1 (current MVP)**: Risk dashboards, predictions, community reporting
+    - **Phase 2**: Google OAuth, SMS alerts, push notifications
+    - **Phase 3**: Power outage prediction (dumsor), expanded coverage to other Ghanaian cities
+
+    Built by **Sally Annan** as part of a data products course project.
+    """)
