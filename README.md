@@ -13,7 +13,7 @@ This project directly addresses **SDG 11 — Sustainable Cities and
 Communities**, specifically targets 11.5 (disaster risk reduction) 
 and 11.6 (environmental impact and waste management).
 
-## 🚨 The Problem
+##  The Problem
 Accra's informal settlements face three recurring preventable crises:
 - **Flooding** caused by blocked drainage systems during rainy season
 - **Fires** spreading through densely packed buildings with illegal wiring
@@ -22,7 +22,7 @@ Accra's informal settlements face three recurring preventable crises:
 Residents currently have **no warning system** and **no data tools** 
 to anticipate or prepare for these disasters.
 
-## 💡 The Solution
+##  The Solution
 SmartAccra combines three data modules into one platform:
 
 | Module | Data Source | Model Type |
@@ -43,7 +43,7 @@ Nima, Ablekuma, Dansoman, Mamprobi and surrounding areas.
 - **Scikit-learn** — classification and regression models
 - **Pandas & Plotly** — data manipulation and visualisation
 
-## 📊 Data Sources
+## Data Sources
 - [Open-Meteo](https://open-meteo.com/) — Free real-time weather API
 - [OpenStreetMap Overpass API](https://overpass-api.de/) — Building 
   density and infrastructure data for Accra
@@ -51,9 +51,9 @@ Nima, Ablekuma, Dansoman, Mamprobi and surrounding areas.
   district population and urbanisation data
 - Community-reported hazard data (simulated for MVP)
 
-## 🚀 Live Demo
+## Live Demo
 [Click here to view the live app](#) ← *link added after deployment*
 
-## 👩‍💻 Developer
+## Developer
 Built by Sally Annan as part of a data products course project, 
 addressing real urban challenges in Accra, Ghana.
