@@ -1,4 +1,4 @@
-# 🛡️ SmartAccra — Urban Risk Intelligence Platform
+#  SmartAccra — Urban Risk Intelligence Platform
 
 > **Know before it happens.**
 
