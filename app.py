@@ -23,23 +23,46 @@ st.set_page_config(
 # ─────────────────────────────────────────────
 # CUSTOM CSS — matches prototype design
 # ─────────────────────────────────────────────
-st.markdown("""
+
+     st.markdown("""
 <style>
-    .main { background-color: #f8f9fa; }
-    .stApp { background-color: #f8f9fa; }
+    /* ── DARK MODE BASE ── */
+    .stApp { background-color: #0e1117; }
+    .main { background-color: #0e1117; }
     .block-container { padding-top: 2rem; }
-    h1, h2, h3 { color: #1a2e3a; }
+
+    /* ── TEXT ── */
+    h1, h2, h3, h4, p, label, .stMarkdown {
+        color: #f0f2f6 !important;
+    }
+    .stCaption { color: #a0a8b8 !important; }
+
+    /* ── SIDEBAR ── */
+    [data-testid="stSidebar"] {
+        background-color: #1a1f2e !important;
+    }
+    [data-testid="stSidebar"] * {
+        color: #f0f2f6 !important;
+    }
+
+    /* ── METRIC CARDS ── */
     .metric-card {
-        background: white;
+        background: #1e2537;
         padding: 24px;
         border-radius: 16px;
-        box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+        box-shadow: 0 2px 12px rgba(0,0,0,0.3);
         text-align: center;
         margin: 8px 0;
+        border: 1px solid #2d3548;
     }
+    .metric-card h2, .metric-card h3, .metric-card p {
+        color: #f0f2f6 !important;
+    }
+
+    /* ── RISK BADGES ── */
     .risk-high {
         background: #ff4444;
-        color: white;
+        color: white !important;
         padding: 8px 18px;
         border-radius: 20px;
         font-weight: 700;
@@ -48,7 +71,7 @@ st.markdown("""
     }
     .risk-moderate {
         background: #ff9500;
-        color: white;
+        color: white !important;
         padding: 8px 18px;
         border-radius: 20px;
         font-weight: 700;
@@ -57,51 +80,78 @@ st.markdown("""
     }
     .risk-low {
         background: #34c759;
-        color: white;
+        color: white !important;
         padding: 8px 18px;
         border-radius: 20px;
         font-weight: 700;
         display: inline-block;
         font-size: 0.95em;
     }
+
+    /* ── ALERT BANNER ── */
     .alert-banner {
         background: linear-gradient(135deg, #ff4444, #cc0000);
-        color: white;
+        color: white !important;
         padding: 18px 22px;
         border-radius: 14px;
         margin: 16px 0;
         font-weight: 600;
-        box-shadow: 0 4px 12px rgba(255,68,68,0.3);
+        box-shadow: 0 4px 12px rgba(255,68,68,0.4);
     }
+
+    /* ── INFO CARDS ── */
     .info-card {
-        background: white;
+        background: #1e2537;
+        color: #f0f2f6 !important;
         padding: 16px 20px;
         border-radius: 12px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.2);
         margin: 8px 0;
         border-left: 4px solid #2d6a4f;
     }
+    .info-card strong, .info-card small {
+        color: #f0f2f6 !important;
+    }
+
+    /* ── WELCOME CARD ── */
     .welcome-card {
         background: linear-gradient(135deg, #1a4d3a, #2d6a4f);
-        color: white;
+        color: white !important;
         padding: 32px;
         border-radius: 20px;
         margin: 20px 0;
         text-align: center;
-        box-shadow: 0 8px 24px rgba(45,106,79,0.3);
+        box-shadow: 0 8px 24px rgba(45,106,79,0.4);
     }
-    .stButton button {
-        background: #ff9500;
-        color: white;
-        border: none;
-        padding: 12px 24px;
-        border-radius: 10px;
-        font-weight: 600;
+
+    /* ── BUTTONS ── */
+    .stButton > button {
+        background: #ff9500 !important;
+        color: white !important;
+        border: none !important;
+        padding: 12px 24px !important;
+        border-radius: 10px !important;
+        font-weight: 600 !important;
     }
-    .stButton button:hover {
-        background: #e67e00;
-        color: white;
+    .stButton > button:hover {
+        background: #e67e00 !important;
+        color: white !important;
     }
+
+    /* ── INPUT FIELDS ── */
+    .stTextInput input, .stSelectbox select, .stTextArea textarea {
+        background: #1e2537 !important;
+        color: #f0f2f6 !important;
+        border: 1px solid #2d3548 !important;
+        border-radius: 8px !important;
+    }
+
+    /* ── METRICS ── */
+    [data-testid="stMetricValue"] { color: #f0f2f6 !important; }
+    [data-testid="stMetricLabel"] { color: #a0a8b8 !important; }
+
+    /* ── DIVIDER ── */
+    hr { border-color: #2d3548 !important; }
 </style>
 """, unsafe_allow_html=True)
 
