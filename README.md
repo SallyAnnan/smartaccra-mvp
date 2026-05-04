@@ -8,7 +8,7 @@ community-powered alerts for the three most critical urban risks
 facing Accra's informal settlements — flooding, fire hazards, and 
 waste management failures.
 
-## 🌍 SDG Alignment
+## SDG Alignment
 This project directly addresses **SDG 11 — Sustainable Cities and 
 Communities**, specifically targets 11.5 (disaster risk reduction) 
 and 11.6 (environmental impact and waste management).
