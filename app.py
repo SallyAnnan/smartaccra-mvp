@@ -24,7 +24,7 @@ st.set_page_config(
 # CUSTOM CSS — matches prototype design
 # ─────────────────────────────────────────────
 
-     st.markdown("""
+st.markdown("""
 <style>
     /* ── DARK MODE BASE ── */
     .stApp { background-color: #0e1117; }
