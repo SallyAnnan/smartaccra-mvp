@@ -45,27 +45,6 @@ h1, h2, h3 { font-family: 'Plus Jakarta Sans', sans-serif !important; color: #00
 footer { visibility: hidden; }
 header { visibility: hidden; }
 
-/* FIX — ensure sidebar stays visible for navigation */
-[data-testid="stSidebar"] { display: block !important; background: #001b0f !important; }
-[data-testid="stSidebar"] * { color: white !important; }
-[data-testid="stSidebar"] .stRadio label { color: white !important; }
-[data-testid="stSidebar"] .stSelectbox label { color: white !important; }
-[data-testid="stSidebar"] h3 { color: white !important; }
-
-/* FIX — dark mode text so nothing blends into background */
-.stApp, .main, .block-container { background-color: #f9f9f9 !important; color: #1a1c1c !important; }
-.stMarkdown, .stMarkdown p, .stMarkdown span { color: #1a1c1c !important; }
-p { color: #1a1c1c !important; }
-label { color: #1a1c1c !important; }
-.stTextInput input { color: #1a1c1c !important; background: white !important; }
-.stSelectbox div { color: #1a1c1c !important; }
-.stRadio label span { color: #1a1c1c !important; }
-.stCaption { color: #414943 !important; }
-/* Metric values */
-[data-testid="metric-container"] { background: white; border-radius: 16px; padding: 16px; border: 1px solid #f1f5f9; }
-[data-testid="stMetricValue"] { color: #001b0f !important; }
-[data-testid="stMetricLabel"] { color: #414943 !important; }
-
 /* RISK CARDS — from friend's home dashboard */
 .risk-card {
     background: white; border-radius: 24px; padding: 20px; margin: 8px 0;
